@@ -7,16 +7,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --ios-bg: #F2F2F7;
-            --ios-card: #FFFFFF;
-            --ios-blue: #007AFF;
-            --ios-blue-active: #0062CC;
-            --ios-gray: #8E8E93;
-            --ios-light-gray: #E5E5EA;
-            --ios-text: #000000;
-            --ios-subtext: #3C3C43;
-            --ios-separator: rgba(60, 60, 67, 0.12);
-            --ios-success: #34C759;
+            --app-bg: #F4FBF7;
+            --app-card: #FFFFFF;
+            --app-green: #2E7D32;
+            --app-green-gradient: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            --app-green-active: #1B5E20;
+            --app-gray: #757575;
+            --app-light-gray: #E8F5E9;
+            --app-text: #111111;
+            --app-subtext: #424242;
+            --app-separator: rgba(46, 125, 50, 0.12);
         }
 
         * {
@@ -26,8 +26,8 @@
         }
 
         body {
-            background-color: var(--ios-bg);
-            color: var(--ios-text);
+            background-color: var(--app-bg);
+            color: var(--app-text);
             margin: 0;
             padding: 0;
             display: flex;
@@ -58,63 +58,65 @@
             font-weight: 700;
             letter-spacing: -0.5px;
             margin: 0;
+            color: var(--app-text);
         }
 
         .app-header p {
             font-size: 13px;
-            color: var(--ios-gray);
+            color: var(--app-gray);
             margin: 4px 0 0 0;
             font-weight: 400;
         }
 
-        /* iOS Form Group Card */
-        .ios-card {
-            background: var(--ios-card);
-            border-radius: 14px;
+        /* Form Group Card */
+        .app-card {
+            background: var(--app-card);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
             margin-bottom: 20px;
+            border: 1px solid rgba(46, 125, 50, 0.08);
         }
 
-        .ios-field-row {
+        .app-field-row {
             position: relative;
-            padding: 14px 16px;
+            padding: 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--ios-card);
+            background: var(--app-card);
         }
 
-        .ios-field-row:not(:last-child)::after {
+        .app-field-row:not(:last-child)::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 16px;
             right: 0;
-            height: 0.5px;
-            background-color: var(--ios-separator);
+            height: 1px;
+            background-color: var(--app-separator);
         }
 
-        .ios-field-row label {
+        .app-field-row label {
             font-size: 15px;
-            font-weight: 500;
-            color: var(--ios-text);
+            font-weight: 600;
+            color: var(--app-text);
             width: 38%;
             flex-shrink: 0;
         }
 
-        .ios-field-row input {
+        .app-field-row input {
             width: 62%;
             border: none;
             outline: none;
             font-size: 16px;
             text-align: right;
-            color: var(--ios-text);
+            color: var(--app-text);
             background: transparent;
         }
 
-        .ios-field-row input::placeholder {
-            color: var(--ios-gray);
+        .app-field-row input::placeholder {
+            color: var(--app-gray);
             font-weight: 400;
         }
 
@@ -126,26 +128,26 @@
         }
 
         .currency-symbol {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--ios-text);
-            margin-right: 2px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--app-green);
+            margin-right: 4px;
         }
 
         /* Buttons */
         .btn-stack {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .ios-btn {
+        .app-btn {
             width: 100%;
-            background-color: var(--ios-blue);
+            background: var(--app-green-gradient);
             color: #FFFFFF;
             border: none;
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 14px;
+            padding: 16px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -155,97 +157,112 @@
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-            transition: transform 0.1s ease, background-color 0.15s ease;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+            transition: transform 0.1s ease, opacity 0.15s ease;
         }
 
-        .ios-btn:active {
+        .app-btn:active {
             transform: scale(0.98);
-            background-color: var(--ios-blue-active);
+            opacity: 0.9;
         }
 
-        .ios-btn-secondary {
-            background-color: var(--ios-light-gray);
-            color: var(--ios-blue);
+        .app-btn-secondary {
+            background: var(--app-light-gray);
+            color: var(--app-green);
+            box-shadow: none;
+            font-weight: 600;
         }
 
-        .ios-btn-secondary:active {
-            background-color: #D1D1D6;
+        .app-btn-secondary:active {
+            background: #D0EBE2;
         }
 
-        .ios-btn-gpay {
+        .app-btn-gpay {
             background-color: #000000;
             color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .ios-btn-gpay:active {
+        .app-btn-gpay:active {
             background-color: #1A1A1A;
         }
 
         /* Screen 2 Display Elements */
         .upi-header-card {
-            background: var(--ios-card);
-            border-radius: 14px;
-            padding: 12px 16px;
+            background: var(--app-card);
+            border-radius: 16px;
+            padding: 14px 16px;
             text-align: center;
             font-size: 13px;
-            color: var(--ios-subtext);
+            color: var(--app-subtext);
             margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
+            border: 1px solid rgba(46, 125, 50, 0.08);
         }
 
         .upi-id-badge {
             display: inline-block;
-            margin-top: 2px;
+            margin-top: 4px;
             font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 15px;
             font-weight: 700;
-            color: var(--ios-blue);
+            color: var(--app-green);
         }
 
         .amount-display-container {
             text-align: center;
-            padding: 16px 8px;
+            padding: 20px 8px;
         }
 
         .amount-display-container .label {
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--ios-gray);
-            font-weight: 600;
+            letter-spacing: 0.8px;
+            color: var(--app-gray);
+            font-weight: 700;
         }
 
         .amount-display-container .value {
-            font-size: 36px;
+            font-size: 40px;
             font-weight: 800;
-            color: var(--ios-text);
-            margin-top: 2px;
+            color: var(--app-text);
+            margin-top: 4px;
             letter-spacing: -0.5px;
         }
 
+        .amount-in-words {
+            font-size: 13px;
+            color: var(--app-gray);
+            margin-top: 6px;
+            font-weight: 500;
+            text-transform: capitalize;
+            font-style: italic;
+        }
+
         .qr-card {
-            background: var(--ios-card);
+            background: var(--app-card);
             border-radius: 20px;
             padding: 24px;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.08);
+            border: 1px solid rgba(46, 125, 50, 0.08);
         }
 
         /* Footer Credit */
         .developer-footer {
             text-align: center;
             font-size: 12px;
-            color: var(--ios-gray);
+            color: var(--app-gray);
             margin-top: auto;
             padding-top: 20px;
             letter-spacing: -0.1px;
         }
 
         .developer-footer strong {
-            color: var(--ios-subtext);
+            color: var(--app-subtext);
             font-weight: 600;
         }
 
@@ -276,25 +293,25 @@
 
             <div id="setup-screen" class="fade-in">
                 <form id="payment-form">
-                    <div class="ios-card">
-                        <div class="ios-field-row">
+                    <div class="app-card">
+                        <div class="app-field-row">
                             <label for="amount">Amount</label>
                             <div class="amount-input-wrapper">
                                 <span class="currency-symbol">₹</span>
-                                <input type="number" id="amount" step="any" min="1" placeholder="0.00" inputmode="decimal" required>
+                                <input type="number" id="amount" step="any" min="1" placeholder="" inputmode="decimal" value="" required>
                             </div>
                         </div>
-                        <div class="ios-field-row">
+                        <div class="app-field-row">
                             <label for="remarks">Remarks</label>
-                            <input type="text" id="remarks" placeholder="Enter remarks">
+                            <input type="text" id="remarks" placeholder="" value="">
                         </div>
-                        <div class="ios-field-row">
+                        <div class="app-field-row">
                             <label for="details">Additional</label>
-                            <input type="text" id="details" placeholder="Extra details">
+                            <input type="text" id="details" placeholder="" value="">
                         </div>
                     </div>
 
-                    <button type="submit" class="ios-btn">Generate Payment Screen</button>
+                    <button type="submit" class="app-btn">Generate Payment Screen</button>
                 </form>
             </div>
 
@@ -304,18 +321,19 @@
                     <span class="upi-id-badge" id="display-upi">sdarpan128@oksbi</span>
                 </div>
 
-                <div class="ios-card">
+                <div class="app-card">
                     <div class="amount-display-container">
                         <div class="label">Total Amount</div>
-                        <div class="value">₹<span id="display-amount">0.00</span></div>
+                        <div class="value">₹<span id="display-amount">0</span></div>
+                        <div class="amount-in-words" id="display-amount-words">Zero Rupees Only</div>
                     </div>
                     
-                    <div id="remarks-row" class="ios-field-row hidden">
-                        <label style="color: var(--ios-gray);">Remarks</label>
+                    <div id="remarks-row" class="app-field-row hidden">
+                        <label style="color: var(--app-gray);">Remarks</label>
                         <span id="display-remarks" style="font-weight: 500;"></span>
                     </div>
-                    <div id="details-row" class="ios-field-row hidden">
-                        <label style="color: var(--ios-gray);">Additional</label>
+                    <div id="details-row" class="app-field-row hidden">
+                        <label style="color: var(--app-gray);">Additional</label>
                         <span id="display-details" style="font-weight: 500;"></span>
                     </div>
                 </div>
@@ -325,9 +343,10 @@
                 </div>
 
                 <div class="btn-stack">
-                    <a id="gpay-btn" href="#" class="ios-btn ios-btn-gpay">Pay via Google Pay</a>
-                    <a id="generic-upi-btn" href="#" class="ios-btn ios-btn-secondary">Other UPI Apps</a>
-                    <button id="share-btn" class="ios-btn ios-btn-secondary">Share Payment Link</button>
+                    <a id="gpay-btn" href="#" class="app-btn app-btn-gpay">Pay via Google Pay</a>
+                    <a id="generic-upi-btn" href="#" class="app-btn app-btn-secondary">Other UPI Apps</a>
+                    <button id="share-btn" class="app-btn app-btn-secondary">Share Payment Link</button>
+                    <button id="new-link-btn" class="app-btn app-btn-secondary" style="background: transparent; color: var(--app-green);">Create Another Link</button>
                 </div>
             </div>
         </div>
@@ -350,10 +369,13 @@
         const paymentScreen = document.getElementById('payment-screen');
         const screenTitle = document.getElementById('screen-title');
         const screenSubtitle = document.getElementById('screen-subtitle');
+        const shareBtn = document.getElementById('share-btn');
 
-        // Automatic routing if opened via shareable link
-        if (paramAmount) {
-            renderPaymentScreen(paramAmount, paramRemarks, paramDetails);
+        // Check if opened via a shared link (if `am` exists in URL)
+        const isSharedView = paramAmount !== null;
+
+        if (isSharedView) {
+            renderPaymentScreen(paramAmount, paramRemarks, paramDetails, true);
         }
 
         // Form Submit Handler
@@ -365,41 +387,88 @@
 
             const newUrl = new URL(window.location.href);
             newUrl.searchParams.set('am', amount);
-            if (remarks) newUrl.searchParams.set('tn', remarks);
-            if (details) newUrl.searchParams.set('dt', details);
+            if (remarks) newUrl.searchParams.set('tn', remarks); else newUrl.searchParams.delete('tn');
+            if (details) newUrl.searchParams.set('dt', details); else newUrl.searchParams.delete('dt');
             
             window.history.pushState({}, '', newUrl);
-            renderPaymentScreen(amount, remarks, details);
+            renderPaymentScreen(amount, remarks, details, false);
         });
 
+        // Button to create another payment link
+        document.getElementById('new-link-btn').addEventListener('click', function() {
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.pushState({}, '', cleanUrl);
+            
+            // Reset input values
+            document.getElementById('amount').value = '';
+            document.getElementById('remarks').value = '';
+            document.getElementById('details').value = '';
+
+            // Toggle screens back
+            paymentScreen.classList.add('hidden');
+            setupScreen.classList.remove('hidden');
+            screenTitle.textContent = "Create Payment";
+            screenSubtitle.textContent = "Generate dynamic instant UPI link";
+        });
+
+        // Number to Words Converter
+        function convertNumberToWords(num) {
+            if (isNaN(num) || num === 0) return "Zero Rupees Only";
+            
+            const parts = num.toString().split('.');
+            const integerPart = parseInt(parts[0], 10);
+            
+            const a = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ', 'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
+            const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+            function getWords(n) {
+                if (n === 0) return '';
+                if (n < 20) return a[n];
+                if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + a[n % 10] : '');
+                if (n < 1000) return a[Math.floor(n / 100)] + 'Hundred ' + (n % 100 !== 0 ? 'and ' + getWords(n % 100) : '');
+                if (n < 100000) return getWords(Math.floor(n / 1000)) + 'Thousand ' + (n % 1000 !== 0 ? getWords(n % 1000) : '');
+                if (n < 10000000) return getWords(Math.floor(n / 100000)) + 'Lakh ' + (n % 100000 !== 0 ? getWords(n % 100000) : '');
+                return getWords(Math.floor(n / 10000000)) + 'Crore ' + (n % 10000000 !== 0 ? getWords(n % 10000000) : '');
+            }
+
+            const wordResult = getWords(integerPart).trim();
+            return wordResult ? `${wordResult} Rupees Only` : "Zero Rupees Only";
+        }
+
         // Screen Rendering Function
-        function renderPaymentScreen(amount, remarks, details) {
+        function renderPaymentScreen(amount, remarks, details, sharedMode) {
             setupScreen.classList.add('hidden');
             paymentScreen.classList.remove('hidden');
             
             screenTitle.textContent = "Complete Payment";
             screenSubtitle.textContent = "Scan QR or tap to open app";
 
-            // Format Amount to 2 Decimal Places
-            document.getElementById('display-amount').textContent = Number(amount).toLocaleString('en-IN', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
+            // If viewed via shareable link, hide the Share button
+            if (sharedMode) {
+                shareBtn.classList.add('hidden');
+            } else {
+                shareBtn.classList.remove('hidden');
+            }
 
-            // Handle optional field visibility cleanly
+            const numericAmount = Math.round(Number(amount));
+            document.getElementById('display-amount').textContent = numericAmount.toLocaleString('en-IN');
+            document.getElementById('display-amount-words').textContent = convertNumberToWords(numericAmount);
+
             if (remarks) {
                 document.getElementById('display-remarks').textContent = remarks;
                 document.getElementById('remarks-row').classList.remove('hidden');
+            } else {
+                document.getElementById('remarks-row').classList.add('hidden');
             }
             if (details) {
                 document.getElementById('display-details').textContent = details;
                 document.getElementById('details-row').classList.remove('hidden');
+            } else {
+                document.getElementById('details-row').classList.add('hidden');
             }
 
-            // Standard UPI Deep-Link Format
-            const upiString = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent(DEFAULT_NAME)}&am=${encodeURIComponent(amount)}${remarks ? `&tn=${encodeURIComponent(remarks)}` : ''}&cu=INR`;
+            const upiString = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent(DEFAULT_NAME)}&am=${encodeURIComponent(numericAmount)}${remarks ? `&tn=${encodeURIComponent(remarks)}` : ''}&cu=INR`;
 
-            // Draw QR Code
             document.getElementById('qr-code').innerHTML = "";
             new QRCode(document.getElementById('qr-code'), {
                 text: upiString,
@@ -408,16 +477,14 @@
                 correctLevel: QRCode.CorrectLevel.M
             });
 
-            // Set Button Links
             document.getElementById('gpay-btn').href = upiString;
             document.getElementById('generic-upi-btn').href = upiString;
 
-            // Handle Share Action
-            document.getElementById('share-btn').onclick = function() {
+            shareBtn.onclick = function() {
                 if (navigator.share) {
                     navigator.share({
                         title: 'Payment Request',
-                        text: `Payment request of ₹${amount}`,
+                        text: `Payment request of ₹${numericAmount}`,
                         url: window.location.href
                     }).catch(() => {});
                 } else {
