@@ -447,11 +447,11 @@
             screenSubtitle.textContent = "Scan QR or tap to open app";
 
             if (sharedMode) {
-                // If it's a shared link viewed by a customer: hide Share button and "Create Another Link" button
+                // Automatically maximize full screen view for customers opening a shared link
                 shareBtn.classList.add('hidden');
                 newLinkBtn.classList.add('hidden');
             } else {
-                // If generated locally by the merchant/user: show Share button and "Create Another Link" button
+                // Generated locally by merchant: show management options
                 shareBtn.classList.remove('hidden');
                 newLinkBtn.classList.remove('hidden');
             }
