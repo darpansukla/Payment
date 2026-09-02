@@ -291,6 +291,7 @@
                 <p id="screen-subtitle">Generate dynamic instant UPI link</p>
             </div>
 
+            <!-- Setup Screen -->
             <div id="setup-screen" class="fade-in">
                 <form id="payment-form">
                     <div class="app-card">
@@ -315,6 +316,7 @@
                 </form>
             </div>
 
+            <!-- Payment Screen -->
             <div id="payment-screen" class="hidden fade-in">
                 <div class="upi-header-card">
                     Paying to VPA<br>
@@ -346,7 +348,7 @@
                     <a id="gpay-btn" href="#" class="app-btn app-btn-gpay">Pay via Google Pay</a>
                     <a id="generic-upi-btn" href="#" class="app-btn app-btn-secondary">Other UPI Apps</a>
                     <button id="share-btn" class="app-btn app-btn-secondary">Share Payment Link</button>
-                    <button id="new-link-btn" class="app-btn app-btn-secondary" style="background: transparent; color: var(--app-green);">Create Another Link</button>
+                    <button id="new-link-btn" class="app-btn app-btn-secondary hidden" style="background: transparent; color: var(--app-green);">Create Another Link</button>
                 </div>
             </div>
         </div>
@@ -370,6 +372,7 @@
         const screenTitle = document.getElementById('screen-title');
         const screenSubtitle = document.getElementById('screen-subtitle');
         const shareBtn = document.getElementById('share-btn');
+        const newLinkBtn = document.getElementById('new-link-btn');
 
         // Check if opened via a shared link (if `am` exists in URL)
         const isSharedView = paramAmount !== null;
@@ -378,7 +381,7 @@
             renderPaymentScreen(paramAmount, paramRemarks, paramDetails, true);
         }
 
-        // Form Submit Handler
+        // Form Submit Handler (When the creator generates it locally)
         document.getElementById('payment-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const amount = document.getElementById('amount').value;
@@ -394,8 +397,8 @@
             renderPaymentScreen(amount, remarks, details, false);
         });
 
-        // Button to create another payment link
-        document.getElementById('new-link-btn').addEventListener('click', function() {
+        // Button to create another payment link (Only visible on creator's generated view)
+        newLinkBtn.addEventListener('click', function() {
             const cleanUrl = window.location.origin + window.location.pathname;
             window.history.pushState({}, '', cleanUrl);
             
@@ -443,11 +446,14 @@
             screenTitle.textContent = "Complete Payment";
             screenSubtitle.textContent = "Scan QR or tap to open app";
 
-            // If viewed via shareable link, hide the Share button
             if (sharedMode) {
+                // If it's a shared link viewed by a customer: hide Share button and "Create Another Link" button
                 shareBtn.classList.add('hidden');
+                newLinkBtn.classList.add('hidden');
             } else {
+                // If generated locally by the merchant/user: show Share button and "Create Another Link" button
                 shareBtn.classList.remove('hidden');
+                newLinkBtn.classList.remove('hidden');
             }
 
             const numericAmount = Math.round(Number(amount));
