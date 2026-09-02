@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Quick Pay</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --ios-bg: #F2F2F7;
+            --ios-card: #FFFFFF;
+            --ios-blue: #007AFF;
+            --ios-blue-active: #0062CC;
+            --ios-gray: #8E8E93;
+            --ios-light-gray: #E5E5EA;
+            --ios-text: #000000;
+            --ios-subtext: #3C3C43;
+            --ios-separator: rgba(60, 60, 67, 0.12);
+            --ios-success: #34C759;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--ios-bg);
+            color: var(--ios-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .app-viewport {
+            width: 100%;
+            max-width: 414px;
+            min-height: 100vh;
+            padding: 16px 20px 24px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Header */
+        .app-header {
+            text-align: center;
+            margin-top: 12px;
+            margin-bottom: 24px;
+        }
+
+        .app-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .app-header p {
+            font-size: 13px;
+            color: var(--ios-gray);
+            margin: 4px 0 0 0;
+            font-weight: 400;
+        }
+
+        /* iOS Form Group Card */
+        .ios-card {
+            background: var(--ios-card);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .ios-field-row {
+            position: relative;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--ios-card);
+        }
+
+        .ios-field-row:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 16px;
+            right: 0;
+            height: 0.5px;
+            background-color: var(--ios-separator);
+        }
+
+        .ios-field-row label {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--ios-text);
+            width: 38%;
+            flex-shrink: 0;
+        }
+
+        .ios-field-row input {
+            width: 62%;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            text-align: right;
+            color: var(--ios-text);
+            background: transparent;
+        }
+
+        .ios-field-row input::placeholder {
+            color: var(--ios-gray);
+            font-weight: 400;
+        }
+
+        .amount-input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 62%;
+        }
+
+        .currency-symbol {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ios-text);
+            margin-right: 2px;
+        }
+
+        /* Buttons */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ios-btn {
+            width: 100%;
+            background-color: var(--ios-blue);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            transition: transform 0.1s ease, background-color 0.15s ease;
+        }
+
+        .ios-btn:active {
+            transform: scale(0.98);
+            background-color: var(--ios-blue-active);
+        }
+
+        .ios-btn-secondary {
+            background-color: var(--ios-light-gray);
+            color: var(--ios-blue);
+        }
+
+        .ios-btn-secondary:active {
+            background-color: #D1D1D6;
+        }
+
+        .ios-btn-gpay {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+
+        .ios-btn-gpay:active {
+            background-color: #1A1A1A;
+        }
+
+        /* Screen 2 Display Elements */
+        .upi-header-card {
+            background: var(--ios-card);
+            border-radius: 14px;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--ios-subtext);
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .upi-id-badge {
+            display: inline-block;
+            margin-top: 2px;
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ios-blue);
+        }
+
+        .amount-display-container {
+            text-align: center;
+            padding: 16px 8px;
+        }
+
+        .amount-display-container .label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ios-gray);
+            font-weight: 600;
+        }
+
+        .amount-display-container .value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--ios-text);
+            margin-top: 2px;
+            letter-spacing: -0.5px;
+        }
+
+        .qr-card {
+            background: var(--ios-card);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Footer Credit */
+        .developer-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--ios-gray);
+            margin-top: auto;
+            padding-top: 20px;
+            letter-spacing: -0.1px;
+        }
+
+        .developer-footer strong {
+            color: var(--ios-subtext);
+            font-weight: 600;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Soft fade animation */
+        .fade-in {
+            animation: fadeIn 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-viewport">
+        <div>
+            <div class="app-header">
+                <h1 id="screen-title">Create Payment</h1>
+                <p id="screen-subtitle">Generate dynamic instant UPI link</p>
+            </div>
+
+            <div id="setup-screen" class="fade-in">
+                <form id="payment-form">
+                    <div class="ios-card">
+                        <div class="ios-field-row">
+                            <label for="amount">Amount</label>
+                            <div class="amount-input-wrapper">
+                                <span class="currency-symbol">₹</span>
+                                <input type="number" id="amount" step="any" min="1" placeholder="0.00" inputmode="decimal" required>
+                            </div>
+                        </div>
+                        <div class="ios-field-row">
+                            <label for="remarks">Remarks</label>
+                            <input type="text" id="remarks" placeholder="Enter remarks">
+                        </div>
+                        <div class="ios-field-row">
+                            <label for="details">Additional</label>
+                            <input type="text" id="details" placeholder="Extra details">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="ios-btn">Generate Payment Screen</button>
+                </form>
+            </div>
+
+            <div id="payment-screen" class="hidden fade-in">
+                <div class="upi-header-card">
+                    Paying to VPA<br>
+                    <span class="upi-id-badge" id="display-upi">sdarpan128@oksbi</span>
+                </div>
+
+                <div class="ios-card">
+                    <div class="amount-display-container">
+                        <div class="label">Total Amount</div>
+                        <div class="value">₹<span id="display-amount">0.00</span></div>
+                    </div>
+                    
+                    <div id="remarks-row" class="ios-field-row hidden">
+                        <label style="color: var(--ios-gray);">Remarks</label>
+                        <span id="display-remarks" style="font-weight: 500;"></span>
+                    </div>
+                    <div id="details-row" class="ios-field-row hidden">
+                        <label style="color: var(--ios-gray);">Additional</label>
+                        <span id="display-details" style="font-weight: 500;"></span>
+                    </div>
+                </div>
+
+                <div class="qr-card">
+                    <div id="qr-code"></div>
+                </div>
+
+                <div class="btn-stack">
+                    <a id="gpay-btn" href="#" class="ios-btn ios-btn-gpay">Pay via Google Pay</a>
+                    <a id="generic-upi-btn" href="#" class="ios-btn ios-btn-secondary">Other UPI Apps</a>
+                    <button id="share-btn" class="ios-btn ios-btn-secondary">Share Payment Link</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="developer-footer">
+            Designed and Developed by <strong>Darpan Sukla</strong>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_UPI_ID = "sdarpan128@oksbi";
+        const DEFAULT_NAME = "Pay";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramAmount = urlParams.get('am');
+        const paramRemarks = urlParams.get('tn');
+        const paramDetails = urlParams.get('dt');
+
+        const setupScreen = document.getElementById('setup-screen');
+        const paymentScreen = document.getElementById('payment-screen');
+        const screenTitle = document.getElementById('screen-title');
+        const screenSubtitle = document.getElementById('screen-subtitle');
+
+        // Automatic routing if opened via shareable link
+        if (paramAmount) {
+            renderPaymentScreen(paramAmount, paramRemarks, paramDetails);
+        }
+
+        // Form Submit Handler
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = document.getElementById('amount').value;
+            const remarks = document.getElementById('remarks').value.trim();
+            const details = document.getElementById('details').value.trim();
+
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set('am', amount);
+            if (remarks) newUrl.searchParams.set('tn', remarks);
+            if (details) newUrl.searchParams.set('dt', details);
+            
+            window.history.pushState({}, '', newUrl);
+            renderPaymentScreen(amount, remarks, details);
+        });
+
+        // Screen Rendering Function
+        function renderPaymentScreen(amount, remarks, details) {
+            setupScreen.classList.add('hidden');
+            paymentScreen.classList.remove('hidden');
+            
+            screenTitle.textContent = "Complete Payment";
+            screenSubtitle.textContent = "Scan QR or tap to open app";
+
+            // Format Amount to 2 Decimal Places
+            document.getElementById('display-amount').textContent = Number(amount).toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            // Handle optional field visibility cleanly
+            if (remarks) {
+                document.getElementById('display-remarks').textContent = remarks;
+                document.getElementById('remarks-row').classList.remove('hidden');
+            }
+            if (details) {
+                document.getElementById('display-details').textContent = details;
+                document.getElementById('details-row').classList.remove('hidden');
+            }
+
+            // Standard UPI Deep-Link Format
+            const upiString = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent(DEFAULT_NAME)}&am=${encodeURIComponent(amount)}${remarks ? `&tn=${encodeURIComponent(remarks)}` : ''}&cu=INR`;
+
+            // Draw QR Code
+            document.getElementById('qr-code').innerHTML = "";
+            new QRCode(document.getElementById('qr-code'), {
+                text: upiString,
+                width: 170,
+                height: 170,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+
+            // Set Button Links
+            document.getElementById('gpay-btn').href = upiString;
+            document.getElementById('generic-upi-btn').href = upiString;
+
+            // Handle Share Action
+            document.getElementById('share-btn').onclick = function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Payment Request',
+                        text: `Payment request of ₹${amount}`,
+                        url: window.location.href
+                    }).catch(() => {});
+                } else {
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        alert('Payment link copied to clipboard!');
+                    });
+                }
+            };
+        }
+    </script>
+</body>
+</html>
