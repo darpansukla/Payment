@@ -177,16 +177,6 @@
             background: #D0EBE2;
         }
 
-        .app-btn-gpay {
-            background-color: #000000;
-            color: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .app-btn-gpay:active {
-            background-color: #1A1A1A;
-        }
-
         /* Screen 2 Display Elements */
         .upi-header-card {
             background: var(--app-card);
@@ -345,8 +335,7 @@
                 </div>
 
                 <div class="btn-stack">
-                    <a id="gpay-btn" href="#" class="app-btn app-btn-gpay">Pay via Google Pay</a>
-                    <a id="generic-upi-btn" href="#" class="app-btn app-btn-secondary">Other UPI Apps</a>
+                    <a id="unified-upi-btn" href="#" class="app-btn">Pay Now via UPI App</a>
                     <button id="share-btn" class="app-btn app-btn-secondary">Share Payment Link</button>
                     <button id="new-link-btn" class="app-btn app-btn-secondary hidden" style="background: transparent; color: var(--app-green);">Create Another Link</button>
                 </div>
@@ -354,7 +343,7 @@
         </div>
 
         <div class="developer-footer">
-            Designed and Developed by <strong>Darpan Sukla</strong>
+            Designed and Developed by <strong>Darpan Sukla</strong>[cite: 1]
         </div>
     </div>
 
@@ -444,7 +433,7 @@
             paymentScreen.classList.remove('hidden');
             
             screenTitle.textContent = "Complete Payment";
-            screenSubtitle.textContent = "Scan QR or tap to open app";
+            screenSubtitle.textContent = "Scan QR or tap to pay";
 
             if (sharedMode) {
                 // Automatically maximize full screen view for customers opening a shared link
@@ -483,8 +472,7 @@
                 correctLevel: QRCode.CorrectLevel.M
             });
 
-            document.getElementById('gpay-btn').href = upiString;
-            document.getElementById('generic-upi-btn').href = upiString;
+            document.getElementById('unified-upi-btn').href = upiString;
 
             shareBtn.onclick = function() {
                 if (navigator.share) {
