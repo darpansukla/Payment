@@ -261,6 +261,64 @@
             display: none !important;
         }
 
+        /* Modal Overlay Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            max-width: 414px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            animation: fadeIn 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .modal-header {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: flex-end;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--app-gray);
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .modal-body img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .modal-footer {
+            padding: 16px;
+            text-align: center;
+        }
+
         /* Soft fade animation */
         .fade-in {
             animation: fadeIn 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
@@ -335,7 +393,7 @@
                 </div>
 
                 <div class="btn-stack">
-                    <a id="unified-upi-btn" href="#" class="app-btn">Pay Now via UPI App</a>
+                    <button id="unified-upi-btn" class="app-btn">Pay Now via UPI App</button>
                     <button id="share-btn" class="app-btn app-btn-secondary">Share Payment Link</button>
                     <button id="new-link-btn" class="app-btn app-btn-secondary hidden" style="background: transparent; color: var(--app-green);">Create Another Link</button>
                 </div>
@@ -343,7 +401,22 @@
         </div>
 
         <div class="developer-footer">
-            Designed and Developed by <strong>Darpan Sukla</strong>[cite: 1]
+            Designed and Developed by <strong>Darpan Sukla</strong>
+        </div>
+    </div>
+
+    <!-- Screenshot Popup Modal -->
+    <div id="screenshot-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="close-modal-btn" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img src="screenshot.png" alt="How to Take Screenshot">
+            </div>
+            <div class="modal-footer">
+                <button id="proceed-to-pay-btn" class="app-btn" style="margin-top: 0;">I Understood</button>
+            </div>
         </div>
     </div>
 
@@ -363,14 +436,22 @@
         const shareBtn = document.getElementById('share-btn');
         const newLinkBtn = document.getElementById('new-link-btn');
 
-        // Check if opened via a shared link (if `am` exists in URL)
+        // Modal elements
+        const modal = document.getElementById('screenshot-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const proceedToPayBtn = document.getElementById('proceed-to-pay-btn');
+        const unifiedUpiBtn = document.getElementById('unified-upi-btn');
+
+        let targetUpiUrl = '';
+
+        // Check if opened via a shared link
         const isSharedView = paramAmount !== null;
 
         if (isSharedView) {
             renderPaymentScreen(paramAmount, paramRemarks, paramDetails, true);
         }
 
-        // Form Submit Handler (When the creator generates it locally)
+        // Form Submit Handler
         document.getElementById('payment-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const amount = document.getElementById('amount').value;
@@ -386,21 +467,42 @@
             renderPaymentScreen(amount, remarks, details, false);
         });
 
-        // Button to create another payment link (Only visible on creator's generated view)
+        // Button to create another payment link
         newLinkBtn.addEventListener('click', function() {
             const cleanUrl = window.location.origin + window.location.pathname;
             window.history.pushState({}, '', cleanUrl);
             
-            // Reset input values
             document.getElementById('amount').value = '';
             document.getElementById('remarks').value = '';
             document.getElementById('details').value = '';
 
-            // Toggle screens back
             paymentScreen.classList.add('hidden');
             setupScreen.classList.remove('hidden');
             screenTitle.textContent = "Create Payment";
             screenSubtitle.textContent = "Generate dynamic instant UPI link";
+        });
+
+        // Event Listeners for Modal Popup
+        unifiedUpiBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', function() {
+            modal.classList.add('hidden');
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+
+        proceedToPayBtn.addEventListener('click', function() {
+            modal.classList.add('hidden');
+            if (targetUpiUrl) {
+                window.location.href = targetUpiUrl;
+            }
         });
 
         // Number to Words Converter
@@ -436,11 +538,9 @@
             screenSubtitle.textContent = "Scan QR or tap to pay";
 
             if (sharedMode) {
-                // Automatically maximize full screen view for customers opening a shared link
                 shareBtn.classList.add('hidden');
                 newLinkBtn.classList.add('hidden');
             } else {
-                // Generated locally by merchant: show management options
                 shareBtn.classList.remove('hidden');
                 newLinkBtn.classList.remove('hidden');
             }
@@ -462,17 +562,15 @@
                 document.getElementById('details-row').classList.add('hidden');
             }
 
-            const upiString = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent(DEFAULT_NAME)}&am=${encodeURIComponent(numericAmount)}${remarks ? `&tn=${encodeURIComponent(remarks)}` : ''}&cu=INR`;
+            targetUpiUrl = `upi://pay?pa=${encodeURIComponent(DEFAULT_UPI_ID)}&pn=${encodeURIComponent(DEFAULT_NAME)}&am=${encodeURIComponent(numericAmount)}${remarks ? `&tn=${encodeURIComponent(remarks)}` : ''}&cu=INR`;
 
             document.getElementById('qr-code').innerHTML = "";
             new QRCode(document.getElementById('qr-code'), {
-                text: upiString,
+                text: targetUpiUrl,
                 width: 170,
                 height: 170,
                 correctLevel: QRCode.CorrectLevel.M
             });
-
-            document.getElementById('unified-upi-btn').href = upiString;
 
             shareBtn.onclick = function() {
                 if (navigator.share) {
